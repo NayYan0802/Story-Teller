@@ -29,7 +29,7 @@ using System.Linq;
  * 
  */
 
-namespace CarterGames.Assets.SaveManager.Editor
+namespace Assets.SaveManager.Editor
 {
     public enum CollectionTypes
     {

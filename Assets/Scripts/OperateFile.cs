@@ -6,20 +6,22 @@ using UnityEditor;
 
 public class OperateFile:MonoBehaviour
 {
-    [MenuItem("Tool/SelectFile")] 
+    public GameObject Aprefab;
+
+    //[MenuItem("Tool/SelectFile")] 
     public static void SeleclFile()
     {
         string selectPath =  SelectFileLog.GetSelectFileName();
         Debug.LogError("选择的路径:" + selectPath);
     }
 
-    [MenuItem("Tool/OpenFile")]
-    public static void OpenFile()
+    //[MenuItem("Tool/OpenFile")]
+    public void OpenFile()
     {
-        OpenFileLog.OpenFileName_();
+        OpenFileLog.OpenFileName_(Aprefab);
     }
 
-    [MenuItem("Tool/SaveFile")]
+    //[MenuItem("Tool/SaveFile")]
     public static void SaveFile()
     {
         OpenFileLog.SaveFileName();

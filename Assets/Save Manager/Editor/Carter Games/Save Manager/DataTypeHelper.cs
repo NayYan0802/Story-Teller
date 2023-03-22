@@ -24,7 +24,7 @@ using UnityEngine;
  * 
  */
 
-namespace CarterGames.Assets.SaveManager.Editor
+namespace Assets.SaveManager.Editor
 {
     public static class DataTypeHelper
     {

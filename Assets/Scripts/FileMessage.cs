@@ -81,7 +81,7 @@ public class OpenFileName
 }
 
 
-public class OpenFileLog
+public class OpenFileLog:MonoBehaviour
 {
     [DllImport("Comdlg32.dll", SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Auto)]
     public static extern bool GetOpenFileName([In, Out] OpenFileName ofn);
@@ -102,7 +102,7 @@ public class OpenFileLog
 
 
 
-    public static void OpenFileName_()
+    public static void OpenFileName_(GameObject prefab)
     {
         OpenFileName openFile = new OpenFileName();
         openFile.structSize = Marshal.SizeOf(openFile);
@@ -133,7 +133,14 @@ public class OpenFileLog
             //Create Texture           
             Texture2D texture2D = new Texture2D(100,100);
             texture2D.LoadImage(bytes);
-            RawImage image = GameObject.Find("RawImage").GetComponent<RawImage>();
+
+            //Create Prefab in Scene
+            GameObject newPicInLib = Instantiate(prefab);
+            newPicInLib.transform.SetParent(GameObject.Find("ImageContent").transform);
+            newPicInLib.transform.localScale =Vector3.one;
+            RawImage image = newPicInLib.GetComponent<RawImage>();
+
+
             image.gameObject.SetActive(true);
             if (image==null)
             {
