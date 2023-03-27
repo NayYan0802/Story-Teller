@@ -8,6 +8,7 @@ public class onAssetInWindow : MonoBehaviour
     public AssetData data;
     public bool isPlayMode = false;
 
+
     //Open up the setting window
     public void OpenSetting()
     {
@@ -57,6 +58,19 @@ public class onAssetInWindow : MonoBehaviour
                 break;
             default:
                 Debug.LogError("Error Sensor Type");
+                break;
+        }
+    }
+
+    public void changeServo(string input)
+    {
+        switch (input)
+        {
+            case "Rotate":
+                data.thisServo = Assets.DataManager.Servo.Rotate;
+                break;
+            default:
+                Debug.LogError("Error Servo Type");
                 break;
         }
     }

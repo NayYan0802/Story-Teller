@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4975944769893500667}
   m_Layer: 5
   m_Name: AssetInWindow
-  m_TagString: PicInLib
+  m_TagString: AssetInWindow
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -88,17 +88,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-    thisMouseClick: 3
-    thisSenser: 4
-    hp: 0
-    armor: 0
-    velocity: 0
-    dmg: 0
-    FindB: 0
-    ShowType1: 0
-    ShowType2: 0
-    Equips: 
-    levelSum: 0
+    thisMouseClick: 0
+    thisSenser: 0
+    thisAudio: {fileID: 0}
+    thisAnimation: {fileID: 0}
+    thisServo: 0
+  isPlayMode: 0
 --- !u!1 &5497676276799091886
 GameObject:
   m_ObjectHideFlags: 0

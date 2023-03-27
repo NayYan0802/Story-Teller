@@ -28,6 +28,12 @@ public class GameManager : MonoBehaviour
     //public Vector2 xy;
 
     public onAssetInWindow currentObjectInWindow;
+    public bool isPlaymode;
+
+    private void Start()
+    {
+        isPlaymode = false;
+    }
 
     private void Update()
     {
@@ -59,6 +65,52 @@ public class GameManager : MonoBehaviour
         else
         {
             Debug.LogError("Current Object in window is null!");
+        }
+    }
+
+    public void changeServo(string name)
+    {
+        if (currentObjectInWindow != null)
+        {
+            currentObjectInWindow.changeServo(name);
+        }
+        else
+        {
+            Debug.LogError("Current Object in window is null!");
+        }
+    }
+
+    public void startPlayMode()
+    {
+        GameObject[] assetsInWindow;
+        assetsInWindow = GameObject.FindGameObjectsWithTag("AssetInWindow");
+        //Debug.Log(assetsInWindow.Length);
+        foreach(var asset in assetsInWindow)
+        {
+            Senser senser =asset.GetComponent<onAssetInWindow>().data.thisSenser;
+            Assets.DataManager.Servo servo=asset.GetComponent<onAssetInWindow>().data.thisServo;
+            switch (senser)
+            {
+                case Senser.Distance:
+                    asset.gameObject.AddComponent<DistanceSensor>();
+                    //Debug.Log("Add");
+                    break;
+                case Senser.SoundA:
+                    asset.gameObject.AddComponent<SoundSensor>();
+                    break;
+                default:
+                    break;
+            }
+
+            switch (servo)
+            {
+                case Assets.DataManager.Servo.Rotate:
+                    asset.gameObject.AddComponent<RotateServo>();
+                    //Debug.Log("Add");
+                    break;
+                default:
+                    break;
+            }
         }
     }
     
