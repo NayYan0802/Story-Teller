@@ -7,15 +7,23 @@ public class StartPlay
     public StartPlay() { }
 }
 
+public class FlyInEvent
+{
+    public FlyInEvent() { }
+}
+
+public class FlyOutEvent
+{
+    public FlyOutEvent() { }
+}
+
 //=========================================Uduino==========================================
 
 public class RotateServoData
 {
-    public float delayTime;
-    public float ServoPos;
-    public RotateServoData(float _delayTime, float _Servopos)
+    public int idx;
+    public RotateServoData(int _idx)
     {
-        delayTime = _delayTime;
-        ServoPos = _Servopos;
+        idx = _idx;
     }
 }

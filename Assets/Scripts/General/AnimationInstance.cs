@@ -9,7 +9,7 @@ public class AnimationInstance : MonoBehaviour
 
     [SerializeField] private Transform StartPos;
     [SerializeField] private Transform EndPos;
-    [SerializeField] private float timeDuration;
+    //[SerializeField] private float timeDuration;
 
     [SerializeField] private Transform[] posArray;
 

@@ -25,7 +25,7 @@ public class SoundSensor : MonoBehaviour
 
         if(Volume > 120f && Volume <= 1023f)
         {
-            EventBus.Publish(new RotateServoData(0.01f, ServoPosMax));
+            EventBus.Publish(new RotateServoData(0));
         }
     }
 }

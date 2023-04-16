@@ -5,15 +5,17 @@ using Uduino;
 
 public class RotateServo : MonoBehaviour
 {
-    UduinoDevice MyBoard;
+    UduinoDevice ServoBoard;
 
+    public float MaxAngle;
+    public float SpinNum;
     //Init sub
     private Subscription<RotateServoData> RotateServoSub;
 
     // Start is called before the first frame update
     void Start()
     {
-        MyBoard = UduinoManager.Instance.GetBoard("StoryStudio");
+        ServoBoard = UduinoManager.Instance.GetBoard("ServoBoard");
         //Assign sub event
         RotateServoSub = EventBus.Subscribe<RotateServoData>(_RotateServo);
     }
@@ -27,14 +29,18 @@ public class RotateServo : MonoBehaviour
     //sub event
     private void _RotateServo(RotateServoData e)
     {
-        StartCoroutine(DelayedSendCommand("ServoRun",e.delayTime, e.ServoPos));
+        StartCoroutine(DelayedSendCommand("ServoRun", MaxAngle));
     }
 
 
-    IEnumerator DelayedSendCommand(string command, float delayTime, float Num1)
+    IEnumerator DelayedSendCommand(string command, float parameter1)
     {
-        yield return new WaitForSeconds(delayTime);
-        UduinoManager.Instance.sendCommand(MyBoard, command, Num1);
+        yield return new WaitForSeconds(0.1f);
+        UduinoManager.Instance.sendCommand(ServoBoard, command, parameter1);
     }
 
+    private void OnDestroy()
+    {
+        EventBus.Unsubscribe(RotateServoSub);
+    }
 }

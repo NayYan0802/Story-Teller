@@ -5,8 +5,9 @@ using UnityEngine;
 namespace Assets.DataManager
 {
     public enum MouseClick {None, Left, Right, Double };
-    public enum Senser {None, Distance, SoundA, SoundB, ArcadeButton };
+    public enum Senser {None, Distance, Sound, ArcadeButton, Motion, RFID };
     public enum Servo {None, Rotate };
+    public enum AnimationType {None,In,Out, Scale, Rotate };
     //This Class Saves every pieces of data of Assets in the window;
     [System.Serializable]
     public class AssetData
@@ -14,7 +15,15 @@ namespace Assets.DataManager
         public MouseClick thisMouseClick;
         public Senser thisSenser;
         public AudioClip thisAudio;
-        public AnimationInstance thisAnimation;
+        //public AnimationInstance thisAnimation;
+        public AnimationType thisAnimation;
         public Servo thisServo;
+        public bool hasSensor;
+        public bool hasMouseClick;
+        public bool hasAnimation;
+        public bool hasAudio;
+        public bool hasServo;
+        public int timeOfSpin;
+        public int AnglesOfSpin;
     }
 }

@@ -7,6 +7,7 @@ using UnityEditor;
 public class OperateFile:MonoBehaviour
 {
     public GameObject Aprefab;
+    public GameObject AudioPrefab;
 
     //[MenuItem("Tool/SelectFile")] 
     public static void SeleclFile()

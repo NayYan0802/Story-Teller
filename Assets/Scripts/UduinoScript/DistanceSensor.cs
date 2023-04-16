@@ -26,7 +26,7 @@ public class DistanceSensor : MonoBehaviour
             ServoPos = (ServoPosMax / 20) * Distance;
             //StartCoroutine(DelayedSendCommand("ServoRun", 0.01f, ServoPos));
             //Send data to servo
-            EventBus.Publish(new RotateServoData(0.01f, ServoPos));
+            EventBus.Publish(new RotateServoData(0));
         }
     }
 }
