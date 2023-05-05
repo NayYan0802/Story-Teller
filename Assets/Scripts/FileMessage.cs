@@ -151,6 +151,60 @@ public class OpenFileLog:MonoBehaviour
             image.SetNativeSize();
         }
     }
+    
+
+    public static void SetBG()
+    {
+        OpenFileName openFile = new OpenFileName();
+        openFile.structSize = Marshal.SizeOf(openFile);
+        openFile.filter = "Image Files(*.jpg*.png)\0*.jpg;*.png";
+        openFile.file = new string(new char[256]);
+        openFile.maxFile = openFile.file.Length;
+        openFile.fileTitle = new string(new char[64]);
+        openFile.maxFileTitle = openFile.fileTitle.Length;
+        //Set default file path
+        string path = Application.streamingAssetsPath;
+        path = path.Replace('/', '\\');
+        openFile.initialDir = path;
+        openFile.title = "Open File";
+        openFile.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000200 | 0x00000008;
+
+        if (GetOpenFileName(openFile))
+        {            
+            FileStream fileStream = new FileStream(openFile.file, FileMode.Open, FileAccess.Read);
+            fileStream.Seek(0, SeekOrigin.Begin);
+            //Create a file length buffer
+            byte[] bytes = new byte[fileStream.Length];
+            //Read File
+            fileStream.Read(bytes, 0, (int)fileStream.Length);            
+            fileStream.Close();
+            fileStream.Dispose();
+            fileStream = null;
+
+            //Create Texture           
+            Texture2D texture2D = new Texture2D(100,100);
+            texture2D.LoadImage(bytes);
+
+            GameManager.Instance.currentPage.GetComponent<RawImage>().texture = texture2D;
+
+
+            ////Create Prefab in Scene
+            //GameObject newPicInLib = Instantiate(prefab);
+            //newPicInLib.transform.SetParent(GameObject.Find("ImageContent").transform);
+            //newPicInLib.transform.localScale =Vector3.one;
+            //RawImage image = newPicInLib.GetComponent<RawImage>();
+
+
+            //image.gameObject.SetActive(true);
+            //if (image==null)
+            //{
+            //    Debug.LogError("Fail Loading RawImages");
+            //    return;
+            //}
+            //image.texture = texture2D;
+            //image.SetNativeSize();
+        }
+    }
 
 
     public static void SaveFileName()

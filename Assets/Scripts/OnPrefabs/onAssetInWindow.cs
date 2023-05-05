@@ -50,13 +50,14 @@ public class onAssetInWindow : MonoBehaviour, IPointerDownHandler, IDragHandler
         {
             GameObject window = GameManager.Instance.currentPage;
             RectTransform windowBounds = window.GetComponent<RectTransform>();
-            if (!RectTransformUtility.RectangleContainsScreenPoint(windowBounds, Camera.main.ScreenToWorldPoint(Input.mousePosition)))
+            if (!RectTransformUtility.RectangleContainsScreenPoint(windowBounds, GameObject.Find("MousePos").transform.position))
             {
                 return;
             }
             Vector3 offsetToOriginal = localPointerPosition - originalLocalPointerPosition;
             transform.localPosition = originalLocalPosition + offsetToOriginal;
         }
+        GameManager.Instance.UpdatePagePreview();
     }
 
     //Open up the setting window
@@ -106,8 +107,11 @@ public class onAssetInWindow : MonoBehaviour, IPointerDownHandler, IDragHandler
             case "Motion":
                 data.thisSenser = Senser.Motion;
                 break;
-            case "ArcadeButton":
-                data.thisSenser = Senser.ArcadeButton;
+            case "ArcadeButtonA":
+                data.thisSenser = Senser.ArcadeButtonA;
+                break;
+            case "ArcadeButtonB":
+                data.thisSenser = Senser.ArcadeButtonB;
                 break;
             default:
                 Debug.LogError("Error Sensor Type");

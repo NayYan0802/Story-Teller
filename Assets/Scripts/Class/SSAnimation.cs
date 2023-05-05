@@ -22,7 +22,8 @@ public class SSAnimation : MonoBehaviour
 
 
     //public float TimeSum { get; set; }
-    public float[] TimeArray { get; set; }
+    //public float[] TimeArray { get; set; }
+    public float speed { get; set; }
 
     private int AniIdx;
 
@@ -63,38 +64,39 @@ public class SSAnimation : MonoBehaviour
     
     public IEnumerator LinearAnimation()
     {
-        while (AniIdx < TimeArray.Length)
+        while (AniIdx < PosArray.Length-1)
         {
-            Debug.Log(TimeArray[AniIdx]);
+            //Debug.Log(TimeArray[AniIdx]);
 
             float time = 0f;
             Transform start = PosArray[AniIdx];
             Transform end = PosArray[AniIdx + 1];
-            float TimeSum = TimeArray[AniIdx];
+            float TimeSum = Vector2.Distance(start.position, end.position) / speed;
+            //float TimeSum = TimeArray[AniIdx];
 
             AniObject.transform.position = start.position;
-            AniObject.transform.localScale = start.localScale;
+            //AniObject.transform.localScale = start.localScale;
             AniObject.transform.eulerAngles = start.eulerAngles;
 
             //Check Input Validation
-            if (TimeArray[AniIdx] <= 0)
-            {
-                Debug.LogError("Wrong Time Sum!");
-            }
+            //if (TimeArray[AniIdx] <= 0)
+            //{
+            //    Debug.LogError("Wrong Time Sum!");
+            //}
 
             //Main Loop
-            while (time < TimeArray[AniIdx])
+            while (time < TimeSum)
             {
                 time += Time.deltaTime;
                 AniObject.transform.position = Vector3.Lerp(start.position, end.position, time / TimeSum);
-                AniObject.transform.localScale = Vector3.Lerp(start.localScale, end.localScale, time / TimeSum);
+                //AniObject.transform.localScale = Vector3.Lerp(start.localScale, end.localScale, time / TimeSum);
                 AniObject.transform.eulerAngles = Vector3.Lerp(start.eulerAngles, end.eulerAngles, time / TimeSum);
                 yield return null;
             }
 
             //Fixed Frame
             AniObject.transform.position = end.position;
-            AniObject.transform.localScale = end.localScale;
+            //AniObject.transform.localScale = end.localScale;
             AniObject.transform.eulerAngles = end.eulerAngles;
 
             AniIdx++;
@@ -121,10 +123,17 @@ public class SSAnimation : MonoBehaviour
     //    this.AniObject = aniObject;
     //}
 
-    public SSAnimation(Transform[] posArray, float[] timeArray, GameObject aniObject)
+    //public SSAnimation(Transform[] posArray, float[] timeArray, GameObject aniObject)
+    //{
+    //    this.PosArray = posArray;
+    //    this.TimeArray = timeArray;
+    //    this.AniObject = aniObject;
+    //    this.AniIdx = 0;
+    //}
+    public SSAnimation(Transform[] posArray, float speed, GameObject aniObject)
     {
         this.PosArray = posArray;
-        this.TimeArray = timeArray;
+        this.speed = speed;
         this.AniObject = aniObject;
         this.AniIdx = 0;
     }

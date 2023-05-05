@@ -18,19 +18,33 @@ public class AnimationOutput : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
-        onAsset = this.GetComponent<onAssetInWindow>();
+        //onAsset = this.GetComponent<onAssetInWindow>();
         //Assign sub event
         //FlyInEventSub = EventBus.Subscribe<FlyInEvent>(_FlyInEvent);
         //FlyOutEventSub = EventBus.Subscribe<FlyOutEvent>(_FlyOutEvent);
-
-        pos = this.GetComponent<onAssetInWindow>().originPos;
+        pos = this.GetComponent<RectTransform>().position;
+        //pos = this.GetComponent<onAssetInWindow>().originPos;
         dir.x = pos.x / Vector2.Distance(pos, Vector2.zero);
         dir.y = pos.y / Vector2.Distance(pos, Vector2.zero);
-        des = pos + dir * 10;
+        des = pos + dir * 1000;
         if (this.GetComponent<onAssetInWindow>().data.hasAnimation&& 
             this.GetComponent<onAssetInWindow>().data.thisAnimation== Assets.DataManager.AnimationType.In)
+        {
+            this.GetComponent<RectTransform>().position = des;
+        }
+    }
+
+    public void Prepare()
+    {
+        pos = this.GetComponent<RectTransform>().position;
+        Debug.Log(pos);
+        dir.x = pos.x / Vector2.Distance(pos, Vector2.zero);
+        dir.y = pos.y / Vector2.Distance(pos, Vector2.zero);
+        des = pos + dir * 1000;
+        if (this.GetComponent<onAssetInWindow>().data.hasAnimation &&
+            this.GetComponent<onAssetInWindow>().data.thisAnimation == Assets.DataManager.AnimationType.In)
         {
             this.GetComponent<RectTransform>().position = des;
         }
@@ -44,13 +58,13 @@ public class AnimationOutput : MonoBehaviour
 
     public void _FlyInEvent()
     {
-        if(onAsset.isPlayMode)
+        //if(onAsset.isPlayMode)
         StartCoroutine(AnimationMove(des, pos, 2));
     }
 
     public void _FlyOutEvent()
     {
-        if(onAsset.isPlayMode)
+        //if(onAsset.isPlayMode)
             StartCoroutine(AnimationMove(pos, des, 2));
     }
 

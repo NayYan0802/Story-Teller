@@ -7,6 +7,7 @@ TagManager:
   - PicInLib
   - AssetInWindow
   - EditWindow
+  - Ignore
   layers:
   - Default
   - TransparentFX
@@ -14,7 +15,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - CameraIgnore
   - 
   - 
   - 

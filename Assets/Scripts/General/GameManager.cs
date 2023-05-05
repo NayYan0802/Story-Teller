@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using Assets.DataManager;
 using TMPro;
 using UnityEngine.EventSystems;
+using static Assets.EventsManager.EventOnOnePage;
+using Assets.EventsManager;
 
 public class GameManager : MonoBehaviour
 {
@@ -35,6 +37,8 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI currentTextInWindow;
     public GameObject currentPage;
     public OnAssetInLib currentImageInLib;
+    public int currentEventIdx;
+    public bool hasSelectEvent;
     public TMP_InputField inputField;
     public bool isPlaymode;
     public int pageIdx;
@@ -44,6 +48,7 @@ public class GameManager : MonoBehaviour
     [Header("Prefabs")]
 
     public GameObject TextIns;
+    public GameObject StopPoint;
 
     [Header("Layer")]
 
@@ -79,12 +84,17 @@ public class GameManager : MonoBehaviour
     public TMP_Dropdown AudioDropDown;
     public AudioManager AudioManager;
     public Assets.EventsManager.EventsManager EventsManager;
+    public RenderTexture CamTex;
+    public GameObject pageContent;
+    public Camera mainCam;
+    public Camera CapCam;
 
 
     private void Start()
     {
         pageIdx = 0;
         isPlaymode = false;
+        hasSelectEvent = false;
         layerInit = GameObject.FindGameObjectsWithTag("AssetInWindow");
         for(int i = 0; i < layerInit.Length; i++)
         {
@@ -117,6 +127,7 @@ public class GameManager : MonoBehaviour
             if (isPlaymode)
             {
                 //Exit Playmode
+                ExitPlayMode();
             }
             else
             {
@@ -126,6 +137,21 @@ public class GameManager : MonoBehaviour
                 Application.Quit();
 #endif
             }
+        }
+
+        //UpdateEvents();
+    }
+
+    public void ExitPlayMode()
+    {
+        isPlaymode = false;
+        mainCam.gameObject.SetActive(true);
+        CapCam.targetTexture = CamTex;
+        CapCam.GetComponent<AudioListener>().enabled = false;
+        GameObject[] ignoreObjects = GameObject.FindGameObjectsWithTag("Ignore");
+        foreach (var o in ignoreObjects)
+        {
+            o.transform.localScale = Vector3.one;
         }
     }
 
@@ -138,7 +164,8 @@ public class GameManager : MonoBehaviour
     {
         if (currentObjectInWindow != null)
         {
-            currentObjectInWindow.changeMouseInput(name);
+            //currentObjectInWindow.changeMouseInput(name);
+            EventsManager.changeMouseInput(name);
         }
         else
         {
@@ -150,7 +177,8 @@ public class GameManager : MonoBehaviour
     {
         if (currentObjectInWindow != null)
         {
-            currentObjectInWindow.changeAnimationOutput(name);
+            //currentObjectInWindow.changeAnimationOutput(name);
+            EventsManager.changeAnimationOutput(name);
         }
         else
         {
@@ -162,7 +190,8 @@ public class GameManager : MonoBehaviour
     {
         if (currentObjectInWindow != null)
         {
-            currentObjectInWindow.changeSensorInput(name);
+            //currentObjectInWindow.changeSensorInput(name);
+            EventsManager.changeSensorInput(name);
         }
         else
         {
@@ -174,7 +203,8 @@ public class GameManager : MonoBehaviour
     {
         if (currentObjectInWindow != null)
         {
-            currentObjectInWindow.changeServo(name);
+            //currentObjectInWindow.changeServo(name);
+            EventsManager.changeServo(name);
         }
         else
         {
@@ -238,51 +268,51 @@ public class GameManager : MonoBehaviour
         updateLayer();
     }
 
-    public void startPlayMode()
-    {
-        GameObject[] assetsInWindow;
-        assetsInWindow = GameObject.FindGameObjectsWithTag("AssetInWindow");
-        //Debug.Log(assetsInWindow.Length);
-        foreach(var asset in assetsInWindow)
-        {
-            Senser senser =asset.GetComponent<onAssetInWindow>().data.thisSenser;
-            Assets.DataManager.Servo servo=asset.GetComponent<onAssetInWindow>().data.thisServo;
-            switch (senser)
-            {
-                case Senser.Distance:
-                    asset.gameObject.AddComponent<DistanceSensor>();
-                    //Debug.Log("Add");
-                    break;
-                case Senser.Sound:
-                    asset.gameObject.AddComponent<SoundSensor>();
-                    break;
-                default:
-                    break;
-            }
+    //public void startPlayMode()
+    //{
+    //    GameObject[] assetsInWindow;
+    //    assetsInWindow = GameObject.FindGameObjectsWithTag("AssetInWindow");
+    //    //Debug.Log(assetsInWindow.Length);
+    //    foreach(var asset in assetsInWindow)
+    //    {
+    //        Senser senser =asset.GetComponent<onAssetInWindow>().data.thisSenser;
+    //        Assets.DataManager.Servo servo=asset.GetComponent<onAssetInWindow>().data.thisServo;
+    //        switch (senser)
+    //        {
+    //            case Senser.Distance:
+    //                asset.gameObject.AddComponent<DistanceSensor>();
+    //                //Debug.Log("Add");
+    //                break;
+    //            case Senser.Sound:
+    //                asset.gameObject.AddComponent<SoundSensor>();
+    //                break;
+    //            default:
+    //                break;
+    //        }
 
-            switch (servo)
-            {
-                case Assets.DataManager.Servo.Rotate:
-                    asset.gameObject.AddComponent<RotateServo>();
-                    //Debug.Log("Add");
-                    break;
-                default:
-                    break;
-            }
+    //        switch (servo)
+    //        {
+    //            case Assets.DataManager.Servo.Rotate:
+    //                asset.gameObject.AddComponent<RotateServo>();
+    //                //Debug.Log("Add");
+    //                break;
+    //            default:
+    //                break;
+    //        }
 
-            if (asset.GetComponent<onAssetInWindow>().data.hasMouseClick)
-            {
-                asset.gameObject.AddComponent<ClickInput>();
-            }
-            if (asset.GetComponent<onAssetInWindow>().data.hasAnimation)
-            {
-                asset.gameObject.AddComponent<AnimationOutput>();
-            }
+    //        if (asset.GetComponent<onAssetInWindow>().data.hasMouseClick)
+    //        {
+    //            asset.gameObject.AddComponent<ClickInput>();
+    //        }
+    //        if (asset.GetComponent<onAssetInWindow>().data.hasAnimation)
+    //        {
+    //            asset.gameObject.AddComponent<AnimationOutput>();
+    //        }
 
-            asset.GetComponent<onAssetInWindow>().setOriginPos();
-            asset.GetComponent<onAssetInWindow>().isPlayMode = true;
-        }
-    }
+    //        asset.GetComponent<onAssetInWindow>().setOriginPos();
+    //        asset.GetComponent<onAssetInWindow>().isPlayMode = true;
+    //    }
+    //}
     
     //public void UpdatePage(GameObject page, Camera c)
     //{
@@ -424,18 +454,22 @@ public class GameManager : MonoBehaviour
         if (MouseClickTG.GetComponent<Toggle>().isOn)
         {
             currentObjectInWindow.data.hasMouseClick = true;
+            EventsManager.data.hasMouseClick = true;
         }
         else
         {
             currentObjectInWindow.data.hasMouseClick = false;
+            EventsManager.data.hasMouseClick = false;
         }
         if (SensorTG.GetComponent<Toggle>().isOn)
         {
             currentObjectInWindow.data.hasSensor = true;
+            EventsManager.data.hasSensor = true;
         }
         else
         {
             currentObjectInWindow.data.hasSensor = false;
+            EventsManager.data.hasSensor = false;
         }
     }
 
@@ -448,26 +482,32 @@ public class GameManager : MonoBehaviour
         if (AnimationTG.GetComponent<Toggle>().isOn)
         {
             currentObjectInWindow.data.hasAnimation = true;
+            EventsManager.data.hasAnimation = true;
         }
         else
         {
             currentObjectInWindow.data.hasAnimation = false;
+            EventsManager.data.hasAnimation = false;
         }
         if (AudioTG.GetComponent<Toggle>().isOn)
         {
             currentObjectInWindow.data.hasAudio = true;
+            EventsManager.data.hasAudio = true;
         }
         else
         {
             currentObjectInWindow.data.hasAudio = false;
+            EventsManager.data.hasAudio = false;
         }
         if (ServoTG.GetComponent<Toggle>().isOn)
         {
             currentObjectInWindow.data.hasServo = true;
+            EventsManager.data.hasServo = true;
         }
         else
         {
             currentObjectInWindow.data.hasServo = false;
+            EventsManager.data.hasServo = false;
         }
     }
 
@@ -477,7 +517,8 @@ public class GameManager : MonoBehaviour
         {
             return;
         }
-        if (currentObjectInWindow.data.hasServo)
+        //if (currentObjectInWindow.data.hasServo)
+        if (EventsManager.data.hasServo)
         {
             if (ServoDropDown.options[ServoDropDown.value].text.Contains("Spin"))
             {
@@ -508,22 +549,38 @@ public class GameManager : MonoBehaviour
         {
             return;
         }
-        if(currentObjectInWindow.data.hasServo && ServoDropDown.options[ServoDropDown.value].text.Contains("Spin"))
+        //if(currentObjectInWindow.data.hasServo && ServoDropDown.options[ServoDropDown.value].text.Contains("Spin"))
+        if(EventsManager.data.hasServo && ServoDropDown.options[ServoDropDown.value].text.Contains("Spin"))
         {
-            currentObjectInWindow.data.timeOfSpin = (int)TimeOfSpinSlider.value;
+            //currentObjectInWindow.data.timeOfSpin = (int)TimeOfSpinSlider.value;
+            EventsManager.data.timeOfSpin = (int)TimeOfSpinSlider.value;
         }
-        else if(currentObjectInWindow.data.hasServo && ServoDropDown.options[ServoDropDown.value].text.Contains("Angle"))
+        //else if(currentObjectInWindow.data.hasServo && ServoDropDown.options[ServoDropDown.value].text.Contains("Angle"))
+        else if(EventsManager.data.hasServo && ServoDropDown.options[ServoDropDown.value].text.Contains("Angle"))
         {
             for(int i = 0; i < AngleTG.Length; i++)
             {
                 if (AngleTG[i].isOn)
                 {
                     //0 45 90 135 180
-                    currentObjectInWindow.data.AnglesOfSpin = i * 45;
+                    //currentObjectInWindow.data.AnglesOfSpin = i * 45;
+                    EventsManager.data.AnglesOfSpin = i * 45;
                 }
             }
         }
     }
+
+    public void PresetAnimationUpdate(bool input)
+    {
+        EventsManager.data.hasPresetAnimation = input;
+    }
+    
+
+    public void CostumAnimationUpdate(bool input)
+    {
+        EventsManager.data.hasCustomAnimation = input;
+    }
+
 
     public bool currentObjectValidationCheck()
     {
@@ -549,11 +606,15 @@ public class GameManager : MonoBehaviour
                 {
                     gameObject.transform.GetChild(0).GetComponent<Image>().enabled = true;
                     gameObject.transform.GetChild(0).GetComponent<onDragPoint>().enabled = true;
+                    gameObject.transform.GetChild(2).GetComponent<Image>().enabled = true;
+                    gameObject.transform.GetChild(2).GetComponent<onDragPointRotate>().enabled = true;
                 }
                 else
                 {
                     gameObject.transform.GetChild(0).GetComponent<Image>().enabled = false;
                     gameObject.transform.GetChild(0).GetComponent<onDragPoint>().enabled = false;
+                    gameObject.transform.GetChild(2).GetComponent<Image>().enabled = false;
+                    gameObject.transform.GetChild(2).GetComponent<onDragPointRotate>().enabled = false;
                 }
             }
         }
@@ -563,7 +624,8 @@ public class GameManager : MonoBehaviour
     public void LoadCurrentObjectData()
     {
         //output
-        if (currentObjectInWindow.data.hasAnimation)
+        //if (currentObjectInWindow.data.hasAnimation)
+        if (EventsManager.data.hasAnimation)
         {
             AnimationTG.GetComponent<Toggle>().isOn = true;
         }
@@ -571,15 +633,19 @@ public class GameManager : MonoBehaviour
         {
             AnimationTG.GetComponent<Toggle>().isOn = false;
         }
-        if (currentObjectInWindow.data.hasAudio)
+        //if (currentObjectInWindow.data.hasAudio)
+        if (EventsManager.data.hasAudio)
         {
             AudioTG.GetComponent<Toggle>().isOn = true;
+            EventsManager.data.thisAudio = EventsManager.allEvents[GameManager.Instance.pageIdx].EventsOnThisPage[GameManager.Instance.currentEventIdx].data.thisAudio;
         }
         else
         {
             AudioTG.GetComponent<Toggle>().isOn = false;
+            EventsManager.data.thisAudio = null;
         }
-        if (currentObjectInWindow.data.hasServo)
+        //if (currentObjectInWindow.data.hasServo)
+        if (EventsManager.data.hasServo)
         {
             ServoTG.GetComponent<Toggle>().isOn = true;
         }
@@ -589,7 +655,8 @@ public class GameManager : MonoBehaviour
         }
 
         //input
-        if (currentObjectInWindow.data.hasMouseClick)
+        //if (currentObjectInWindow.data.hasMouseClick)
+        if (EventsManager.data.hasMouseClick)
         {
             MouseClickTG.GetComponent<Toggle>().isOn = true;
         }
@@ -597,7 +664,8 @@ public class GameManager : MonoBehaviour
         {
             MouseClickTG.GetComponent<Toggle>().isOn = false;
         }
-        if (currentObjectInWindow.data.hasSensor)
+        //if (currentObjectInWindow.data.hasSensor)
+        if (EventsManager.data.hasSensor)
         {
             SensorTG.GetComponent<Toggle>().isOn = true;
         }
@@ -640,7 +708,8 @@ public class GameManager : MonoBehaviour
 
     public void AudioPreview()
     {
-        GameObject.Find("AudioPreviewButton").GetComponent<AudioSource>().PlayOneShot(currentObjectInWindow.data.thisAudio);
+        Debug.Log(EventsManager.data.thisAudio);
+        GameObject.Find("AudioPreviewButton").GetComponent<AudioSource>().PlayOneShot(EventsManager.data.thisAudio);
     }
 
     public void DeleteAssetInLib()
@@ -651,5 +720,34 @@ public class GameManager : MonoBehaviour
         }
         Destroy(currentImageInLib.gameObject);
         currentImageInLib = null;
+    }
+
+    public void UpdateEvents()
+    {
+        if (hasSelectEvent && currentObjectInWindow != null)
+        {
+            EventsManager.EventUpdate();
+        }
+    }
+
+    public void AddStops()
+    {
+        GameObject newStop = Instantiate(StopPoint, currentPage.transform);
+        EventsManager.data.thisCostumAnimationStops.Add(newStop.transform);
+        newStop.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = (EventsManager.data.thisCostumAnimationStops.IndexOf(newStop.transform)+1).ToString();
+    }
+
+    public void setAniSpeed(float input)
+    {
+        EventsManager.data.CostumAniSpeed = input;
+    }
+
+    public void UpdatePagePreview()
+    {
+        Texture2D texture = new Texture2D(968,541);
+        RenderTexture.active = CamTex;
+        texture.ReadPixels(new Rect(0, 0, 968, 541), 0, 0);
+        texture.Apply();
+        pageContent.transform.GetChild(pageIdx).GetComponent<RawImage>().texture = texture;
     }
 }

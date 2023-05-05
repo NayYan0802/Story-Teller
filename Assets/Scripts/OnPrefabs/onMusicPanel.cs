@@ -19,7 +19,8 @@ public class onMusicPanel : MonoBehaviour,IDropHandler
 		this.transform.GetChild(0).GetComponent<TMP_Text>().text = originalObj.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text;
         if (GameManager.Instance.currentObjectValidationCheck())
         {
-			GameManager.Instance.currentObjectInWindow.data.thisAudio = originalObj.GetComponent<AudioSource>().clip;
+			//GameManager.Instance.currentObjectInWindow.data.thisAudio = originalObj.GetComponent<AudioSource>().clip;
+			GameManager.Instance.EventsManager.data.thisAudio = originalObj.GetComponent<AudioSource>().clip;
         }
 	}
 }

@@ -7,6 +7,7 @@ public class OnPageSelect : MonoBehaviour
 {
     public void SelectPage()
     {
+        GameManager.Instance.UpdatePagePreview();
         GameManager.Instance.pageIdx = this.transform.GetSiblingIndex();
         for(int i=0;i< GameManager.Instance.Pages.Count; i++)
         {
@@ -16,5 +17,7 @@ public class OnPageSelect : MonoBehaviour
         GameManager.Instance.Pages[GameManager.Instance.pageIdx].SetActive(true);
         this.transform.GetChild(0).GetComponent<RawImage>().enabled = true;
         GameManager.Instance.currentPage = GameManager.Instance.Pages[GameManager.Instance.pageIdx];
+        GameManager.Instance.EventsManager.UpdateEventList();
+        GameManager.Instance.EventsManager.currentEventIdx = 0;
     }
 }

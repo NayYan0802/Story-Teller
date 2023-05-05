@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6030669900433518934}
   m_Layer: 5
   m_Name: EventSequencePoint
-  m_TagString: Untagged
+  m_TagString: Ignore
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

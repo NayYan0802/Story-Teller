@@ -36,7 +36,40 @@ public class onDragPoint : MonoBehaviour, IPointerDownHandler, IDragHandler
 			Mathf.Clamp(sizeDelta.x, minSize.x, maxSize.x),
 			Mathf.Clamp(sizeDelta.y, minSize.y, maxSize.y)
 		);
+		var lScale = panelRectTransform.localScale;
+
+		if (sizeDelta.x < 0&& lScale.x == 1)
+        {
+			lScale.x = -1;
+			sizeDelta.x = Mathf.Abs(sizeDelta.x);
+        }
+  //      else
+  //      {
+		//	lScale.x = 1;
+		//}
+		if(sizeDelta.x < 0&& lScale.x == -1)
+        {
+			lScale.x = 1;
+			sizeDelta.x = Mathf.Abs(sizeDelta.x);
+		}
+
+		if (sizeDelta.y < 0&& lScale.y == 1)
+        {
+			lScale.y = -1;
+			sizeDelta.y = Mathf.Abs(sizeDelta.y);
+        }
+		//      else
+		//      {
+		//	lScale.y = 1;
+		//}
+
+		if (sizeDelta.y < 0 && lScale.y == -1)
+		{
+			lScale.y = 1;
+			sizeDelta.y = Mathf.Abs(sizeDelta.y);
+		}
 
 		panelRectTransform.sizeDelta = sizeDelta;
+		panelRectTransform.localScale = lScale;
 	}
 }

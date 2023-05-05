@@ -27,4 +27,10 @@ public class OperateFile:MonoBehaviour
     {
         OpenFileLog.SaveFileName();
     }
+
+    public static void SetBG()
+    {
+        OpenFileLog.SetBG();
+    }
+
 }
